@@ -4,6 +4,8 @@ import sys
 from environment import client
 from tools import TOOLS, tools_implementation, set_rag_instance
 from rag_library import load_or_build_rag_library
+# main.py 顶部添加
+from learning_log import LearningLogger
 
 # ================= 配置区 =================
 # 全局唯一 RAG 实例，启动时仅加载一次（提速核心）
@@ -145,6 +147,7 @@ def run_agent_stream(messages, sys_prompt):
         print("\033[33m[资料阅读完毕，学伴正在总结...]\033[0m")
 
 if __name__ == "__main__":
+    logger = LearningLogger()
     print("\033[35m=======================================\033[0m")
     print("\033[35m  欢迎使用数据结构智能学伴！\033[0m")
     print("\033[35m=======================================\033[0m")
@@ -186,9 +189,12 @@ if __name__ == "__main__":
         final_system_prompt = build_rag_system_prompt(current_language)
         print("\033[33m[学伴正在思考中，请稍候...]\033[0m")
         
-        # 还原原有的防崩溃报错机制
         try:
-            answer = run_agent_stream(history, final_system_prompt)
-            print(f"\033[32m学伴 >>\033[0m {answer}\n")
+            run_agent_stream(history, final_system_prompt)
+            # 获取学伴的最后一条回复（即 assistant 消息）
+            assistant_reply = history[-1]["content"] if history[-1]["role"] == "assistant" else ""
+            # 简单提取话题关键词（可扩展）
+            topics = []  # 你可以用关键词匹配填充
+            logger.log_conversation(query, assistant_reply, topics)
         except Exception as e:
             print(f"\033[31m哎呀，程序遇到了一点小网络问题：{str(e)}\033[0m\n")

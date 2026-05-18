@@ -1,4 +1,4 @@
-def rag_search(query: str) -> str:
+#def rag_search(query: str) -> str:
     """
     检索课程资料并用大模型进行降噪过滤
     """
