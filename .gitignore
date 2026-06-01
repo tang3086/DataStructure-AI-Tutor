@@ -1,7 +1,5 @@
 .env
 .evn
-environment.py
 library/index.npz
-library/
 .venv/
 __pycache__/
